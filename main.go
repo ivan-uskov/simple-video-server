@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"net/http"
-	"./handlers"
+	"github.com/ivan-uskov/simple-video-server/handlers"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
