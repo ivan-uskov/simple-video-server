@@ -1,13 +1,14 @@
 package handlers
 
-type VideoListItem struct {
+type VideoListItemResponse struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
 	Duration  int    `json:"duration"`
 	Thumbnail string `json:"thumbnail"`
+	Status    int    `json:"status"`
 }
 
-type VideoItem struct {
-	VideoListItem
+type VideoItemResponse struct {
+	VideoListItemResponse
 	URL string `json:"url"`
 }

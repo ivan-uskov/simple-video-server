@@ -7,7 +7,7 @@ import (
 	"database/sql"
 )
 
-type dispatcher struct{
+type router struct{
 	db *sql.DB
 }
 
@@ -16,9 +16,9 @@ func Router(db *sql.DB) http.Handler {
 	r := mux.NewRouter()
 	s := r.PathPrefix("/api/v1").Subrouter()
 
-	d := &dispatcher{db}
+	d := &router{db}
 	s.HandleFunc("/list", list).Methods(http.MethodGet)
-	s.HandleFunc("/video/{ID}", video).Methods(http.MethodGet)
+	s.HandleFunc("/video/{ID}", d.video).Methods(http.MethodGet)
 	s.HandleFunc("/video", d.uploadVideo).Methods(http.MethodPost)
 	return logRequest(r)
 }

@@ -34,14 +34,14 @@ func TestVideo(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	item := &VideoItem{}
+	item := &VideoItemResponse{}
 	err = json.Unmarshal(jsonString, item)
 	if err != nil {
 		t.Errorf("Can't parse json response with error %v", err)
 	}
 }
 
-func getFirstListItem(t *testing.T) *VideoListItem {
+func getFirstListItem(t *testing.T) *VideoListItemResponse {
 	w := httptest.NewRecorder()
 	list(w, nil)
 	response := w.Result()
@@ -61,7 +61,7 @@ func getFirstListItem(t *testing.T) *VideoListItem {
 	if err != nil {
 		t.Fatal(err)
 	}
-	items := make([]VideoListItem, 10)
+	items := make([]VideoListItemResponse, 10)
 	err = json.Unmarshal(jsonString, &items)
 	if err != nil {
 		t.Errorf("Can't parse json response with error %v", err)

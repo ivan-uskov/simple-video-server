@@ -9,8 +9,8 @@ import (
 
 // list is a HTTP handler function which writes a response with list of videos.
 func list(w http.ResponseWriter, _ *http.Request) {
-	var response []VideoListItem
-	record := VideoListItem{}
+	var response []VideoListItemResponse
+	record := VideoListItemResponse{}
 	record.ID = "d290f1ee-6c54-4b01-90e6-d701748f0851"
 	record.Name = "Black Retrospetive Woman"
 	record.Duration = 127

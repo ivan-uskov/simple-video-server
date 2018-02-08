@@ -13,7 +13,7 @@ const (
 	videoFileMimeType = "video/mp4"
 )
 
-func (r *dispatcher) uploadVideo(w http.ResponseWriter, req *http.Request) {
+func (r *router) uploadVideo(w http.ResponseWriter, req *http.Request) {
 	file, handle, err := req.FormFile(videoFileParam)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)

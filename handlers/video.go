@@ -6,24 +6,29 @@ import (
 	"io"
 	log "github.com/sirupsen/logrus"
 	"github.com/gorilla/mux"
+	"github.com/ivan-uskov/simple-video-server/model"
 )
 
 // video is a HTTP handler function which writes a response with video information.
-func video(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+func (r * router) video(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
 	id := vars["ID"]
 	log.WithField("id", id).Info("parse id")
-	if id != "d290f1ee-6c54-4b01-90e6-d701748f0851" {
-		http.NotFound(w, r)
+
+	video, err := model.NewVideoRepository(r.db).Get(id)
+	if err != nil {
+		http.NotFound(w, req)
+		log.WithField("id", id).Warn(err)
 		return
 	}
 
-	response := VideoItem{}
-	response.ID = "d290f1ee-6c54-4b01-90e6-d701748f0851"
-	response.Name = "Black Retrospetive Woman"
-	response.Duration = 127
-	response.Thumbnail = "/some/image.png"
-	response.URL = "/some/video.mp4"
+	response := VideoItemResponse{}
+	response.ID = video.Key
+	response.Name = video.Title
+	response.Duration = video.Duration
+	response.Thumbnail = video.Thumbnail
+	response.URL = video.URL
+	response.Status = video.Status
 
 	b, err := json.Marshal(response)
 	if err != nil {
