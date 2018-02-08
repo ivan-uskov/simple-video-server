@@ -2,21 +2,21 @@ package handlers
 
 import (
 	"net/http"
-	"fmt"
 	"github.com/ivan-uskov/simple-video-server/storage"
 	"github.com/ivan-uskov/simple-video-server/model"
 	log "github.com/sirupsen/logrus"
 )
 
 const (
-	videoFileParam = "video"
+	videoFileParam    = "video"
 	videoFileMimeType = "video/mp4"
 )
 
 func (r *router) uploadVideo(w http.ResponseWriter, req *http.Request) {
 	file, handle, err := req.FormFile(videoFileParam)
 	if err != nil {
-		fmt.Fprintf(w, "%v", err)
+		http.NotFound(w, req)
+		log.Error(err)
 		return
 	}
 	defer file.Close()
@@ -35,7 +35,7 @@ func (r *router) uploadVideo(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = model.NewVideoRepository(r.db).Add(item.Key, "My new video", item.Url)
+	err = model.NewVideoRepository(r.db).Add(item.Key, handle.Filename, item.Url)
 	if err != nil {
 		log.Error(err)
 		storage.Remove(item.Key)
