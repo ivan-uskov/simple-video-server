@@ -5,17 +5,27 @@ import (
 	"encoding/json"
 	log "github.com/sirupsen/logrus"
 	"io"
+	"github.com/ivan-uskov/simple-video-server/model"
 )
 
 // list is a HTTP handler function which writes a response with list of videos.
-func list(w http.ResponseWriter, _ *http.Request) {
+func (r * router) list(w http.ResponseWriter, _ *http.Request) {
+	videos, err := model.NewVideoRepository(r.db).List()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.WithField("err", err).Error("db error")
+		return
+	}
+
 	var response []VideoListItemResponse
-	record := VideoListItemResponse{}
-	record.ID = "d290f1ee-6c54-4b01-90e6-d701748f0851"
-	record.Name = "Black Retrospective Woman"
-	record.Duration = 127
-	record.Thumbnail = "/some/image.png"
-	response = append(response, record)
+	for _, video := range videos {
+		record := VideoListItemResponse{}
+		record.ID = video.Key
+		record.Name = video.Title
+		record.Duration = video.Duration
+		record.Thumbnail = video.Thumbnail
+		response = append(response, record)
+	}
 
 	b, err := json.Marshal(response)
 	if err != nil {

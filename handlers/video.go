@@ -18,7 +18,7 @@ func (r * router) video(w http.ResponseWriter, req *http.Request) {
 	video, err := model.NewVideoRepository(r.db).Get(id)
 	if err != nil {
 		http.NotFound(w, req)
-		log.WithField("id", id).Warn(err)
+		log.WithField("err", err).Warn("db error")
 		return
 	}
 

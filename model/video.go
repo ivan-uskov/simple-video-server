@@ -21,6 +21,7 @@ const (
 type VideoRepository interface {
 	Add(key string, title string, url string) error
 	Get(key string) (*Video, error)
+	List() (map[string]Video, error)
 }
 
 type videoRepository struct {
@@ -39,6 +40,27 @@ func (r *videoRepository) Add(key string, title string, url string) error {
 	}
 
 	return err
+}
+
+func (r *videoRepository) List() (map[string]Video, error) {
+	rows, err := r.db.Query(`SELECT video_key, title, status, duration, url, thumbnail_url FROM video ORDER BY id DESC`)
+	if err == nil {
+		rows.Close()
+	}
+
+	var video Video
+	videos := make(map[string]Video)
+
+	for rows.Next() {
+		err := rows.Scan(&video.Key, &video.Title, &video.Status, &video.Duration, &video.URL, &video.Thumbnail)
+		if err != nil {
+			return nil, err
+		}
+
+		videos[video.Key] = video
+	}
+
+	return videos, nil
 }
 
 func (r *videoRepository) Get(key string) (*Video, error) {
