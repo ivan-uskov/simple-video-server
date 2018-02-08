@@ -15,7 +15,7 @@ type Video struct {
 }
 
 const (
-	videoStatusReady = 3
+	VideoStatusReady = 3
 )
 
 type VideoRepository interface {
@@ -34,7 +34,7 @@ func NewVideoRepository(db *sql.DB) VideoRepository {
 
 func (r *videoRepository) Add(key string, title string, url string) error {
 	q := `INSERT INTO video SET video_key = ?, title = ?, status = ?, url = ?`
-	rows, err := r.db.Query(q, key, title, videoStatusReady, url)
+	rows, err := r.db.Query(q, key, title, VideoStatusReady, url)
 	if err == nil {
 		rows.Close()
 	}

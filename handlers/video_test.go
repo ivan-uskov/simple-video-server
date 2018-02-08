@@ -10,7 +10,7 @@ import (
 
 func TestVideo(t *testing.T) {
 	videoListItem := getFirstListItem(t)
-	r := Router(nil)
+	r := Router(&testVideoRepository{})
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 
@@ -43,7 +43,8 @@ func TestVideo(t *testing.T) {
 
 func getFirstListItem(t *testing.T) *VideoListItemResponse {
 	w := httptest.NewRecorder()
-	list(w, nil)
+	r := router{&testVideoRepository{}}
+	r.list(w, nil)
 	response := w.Result()
 
 	listUrl := "/api/v1/list"

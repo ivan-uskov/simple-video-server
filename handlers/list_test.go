@@ -10,7 +10,9 @@ import (
 
 func TestList(t *testing.T) {
 	w := httptest.NewRecorder()
-	list(w, nil)
+
+	r := router{&testVideoRepository{}}
+	r.list(w, nil)
 	response := w.Result()
 
 	listUrl := "/api/v1/list"

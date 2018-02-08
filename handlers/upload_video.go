@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 	"github.com/ivan-uskov/simple-video-server/storage"
-	"github.com/ivan-uskov/simple-video-server/model"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -35,7 +34,7 @@ func (r *router) uploadVideo(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = model.NewVideoRepository(r.db).Add(item.Key, handle.Filename, item.Url)
+	err = r.videoRepository.Add(item.Key, handle.Filename, item.Url)
 	if err != nil {
 		log.Error(err)
 		storage.Remove(item.Key)

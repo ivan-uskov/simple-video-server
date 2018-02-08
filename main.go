@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/ivan-uskov/simple-video-server/model"
 )
 
 const databaseDsn = `root:1234@/simple_video_server`
@@ -44,7 +45,7 @@ func main() {
 func startServer(serverUrl string, db *sql.DB) *http.Server {
 	log.WithFields(log.Fields{"serverUrl": serverUrl}).Info("starting the server")
 
-	router := handlers.Router(db)
+	router := handlers.Router(model.NewVideoRepository(db))
 	srv := &http.Server{
 		Addr:    serverUrl,
 		Handler: router,

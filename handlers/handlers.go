@@ -4,19 +4,19 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	log "github.com/sirupsen/logrus"
-	"database/sql"
+	"github.com/ivan-uskov/simple-video-server/model"
 )
 
 type router struct{
-	db *sql.DB
+	videoRepository model.VideoRepository
 }
 
 // Router register necessary routes and returns an instance of a router.
-func Router(db *sql.DB) http.Handler {
+func Router(repository model.VideoRepository) http.Handler {
 	r := mux.NewRouter()
 	s := r.PathPrefix("/api/v1").Subrouter()
 
-	actionRouter := &router{db}
+	actionRouter := &router{repository}
 	s.HandleFunc("/list", actionRouter.list).Methods(http.MethodGet)
 	s.HandleFunc("/video/{ID}", actionRouter.video).Methods(http.MethodGet)
 	s.HandleFunc("/video", actionRouter.uploadVideo).Methods(http.MethodPost)

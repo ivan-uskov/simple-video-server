@@ -6,7 +6,6 @@ import (
 	"io"
 	log "github.com/sirupsen/logrus"
 	"github.com/gorilla/mux"
-	"github.com/ivan-uskov/simple-video-server/model"
 )
 
 // video is a HTTP handler function which writes a response with video information.
@@ -15,7 +14,7 @@ func (r * router) video(w http.ResponseWriter, req *http.Request) {
 	id := vars["ID"]
 	log.WithField("id", id).Info("parse id")
 
-	video, err := model.NewVideoRepository(r.db).Get(id)
+	video, err := r.videoRepository.Get(id)
 	if err != nil {
 		http.NotFound(w, req)
 		log.WithField("err", err).Warn("db error")
