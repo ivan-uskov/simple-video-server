@@ -10,7 +10,7 @@ import (
 
 func TestVideo(t *testing.T) {
 	videoListItem := getFirstListItem(t)
-	r := Router()
+	r := Router(nil)
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 
