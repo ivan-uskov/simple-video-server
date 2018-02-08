@@ -16,10 +16,10 @@ func Router(db *sql.DB) http.Handler {
 	r := mux.NewRouter()
 	s := r.PathPrefix("/api/v1").Subrouter()
 
-	d := &router{db}
-	s.HandleFunc("/list", list).Methods(http.MethodGet)
-	s.HandleFunc("/video/{ID}", d.video).Methods(http.MethodGet)
-	s.HandleFunc("/video", d.uploadVideo).Methods(http.MethodPost)
+	actionRouter := &router{db}
+	s.HandleFunc("/list", actionRouter.list).Methods(http.MethodGet)
+	s.HandleFunc("/video/{ID}", actionRouter.video).Methods(http.MethodGet)
+	s.HandleFunc("/video", actionRouter.uploadVideo).Methods(http.MethodPost)
 	return logRequest(r)
 }
 
