@@ -8,7 +8,11 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
+
+const databaseDsn = `root:1234@/simple_video_server`
 
 func init() {
 	// Log as JSON instead of the default ASCII formatter.
@@ -22,19 +26,25 @@ func main() {
 	}
 	defer file.Close()
 
+	db, err := sql.Open("mysql", databaseDsn)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	serverUrl := ":8000"
 	killSignalChan := getKillSignalChan()
-	srv := startServer(serverUrl)
+	srv := startServer(serverUrl, db)
 
 	waitForKillSignal(killSignalChan)
 	log.Info("the service is shutting down...")
 	srv.Shutdown(context.Background())
 }
 
-func startServer(serverUrl string) *http.Server {
+func startServer(serverUrl string, db *sql.DB) *http.Server {
 	log.WithFields(log.Fields{"serverUrl": serverUrl}).Info("starting the server")
 
-	router := handlers.Router()
+	router := handlers.Router(db)
 	srv := &http.Server{
 		Addr:    serverUrl,
 		Handler: router,

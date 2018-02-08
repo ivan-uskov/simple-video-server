@@ -10,3 +10,6 @@
 *.out
 
 vendor/
+
+server.log
+files/

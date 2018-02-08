@@ -4,14 +4,22 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	log "github.com/sirupsen/logrus"
+	"database/sql"
 )
 
+type dispatcher struct{
+	db *sql.DB
+}
+
 // Router register necessary routes and returns an instance of a router.
-func Router() http.Handler {
+func Router(db *sql.DB) http.Handler {
 	r := mux.NewRouter()
 	s := r.PathPrefix("/api/v1").Subrouter()
+
+	d := &dispatcher{db}
 	s.HandleFunc("/list", list).Methods(http.MethodGet)
 	s.HandleFunc("/video/{ID}", video).Methods(http.MethodGet)
+	s.HandleFunc("/video", d.uploadVideo).Methods(http.MethodPost)
 	return logRequest(r)
 }
 
