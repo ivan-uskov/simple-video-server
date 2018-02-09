@@ -44,14 +44,14 @@ func (r *videoRepository) Add(key string, title string, url string) error {
 
 func (r *videoRepository) List() (map[string]Video, error) {
 	rows, err := r.db.Query(`SELECT video_key, title, status, duration, url, thumbnail_url FROM video ORDER BY id DESC`)
-	if err == nil {
-		rows.Close()
+	if err != nil {
+		return nil, err
 	}
+	defer rows.Close()
 
-	var video Video
 	videos := make(map[string]Video)
-
 	for rows.Next() {
+		var video Video
 		err := rows.Scan(&video.Key, &video.Title, &video.Status, &video.Duration, &video.URL, &video.Thumbnail)
 		if err != nil {
 			return nil, err
@@ -66,13 +66,14 @@ func (r *videoRepository) List() (map[string]Video, error) {
 func (r *videoRepository) Get(key string) (*Video, error) {
 	q := `SELECT video_key, title, status, duration, url, thumbnail_url FROM video WHERE video_key = ?`
 	rows, err := r.db.Query(q, key)
-	if err == nil {
-		rows.Close()
-	}
+	if err != nil {
+		return nil, err
 
-	var video Video
+	}
+	defer rows.Close()
 
 	for rows.Next() {
+		var video Video
 		err := rows.Scan(&video.Key, &video.Title, &video.Status, &video.Duration, &video.URL, &video.Thumbnail)
 		if err != nil {
 			return nil, err

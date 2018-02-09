@@ -16,13 +16,16 @@ func (r * router) list(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
+	log.Info(len(videos))
 	var response []VideoListItemResponse
 	for _, video := range videos {
+
 		record := VideoListItemResponse{}
 		record.ID = video.Key
 		record.Name = video.Title
 		record.Duration = video.Duration
 		record.Thumbnail = video.Thumbnail
+		record.Status = video.Status
 		response = append(response, record)
 	}
 
